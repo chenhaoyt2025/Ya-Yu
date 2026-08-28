@@ -22,14 +22,18 @@ $(error Unknown PROFILE "$(PROFILE)". Use seed or spotykach.)
 endif
 
 CPP_STANDARD = -std=c++17
-C_DEFS = -DTARGET_DAISY
+C_DEFS = -DTARGET_DAISY -DUSE_DAISYSP_LGPL
 C_USR_FLAGS = -ffast-math -funroll-loops
-C_INCLUDES = -Isrc
+C_INCLUDES = -Isrc -I$(DAISYSP_DIR)/DaisySP-LGPL/Source -I$(DAISYSP_DIR)/Source/Utility
 
 CPP_SOURCES = \
 	YaYu_main.cpp \
 	src/yayu_engine.cpp \
-	src/models/karplus_string.cpp
+	src/models/karplus_string.cpp \
+	$(DAISYSP_DIR)/DaisySP-LGPL/Source/Effects/reverbsc.cpp \
+	$(DAISYSP_DIR)/DaisySP-LGPL/Source/Effects/bitcrush.cpp \
+	$(DAISYSP_DIR)/DaisySP-LGPL/Source/Effects/fold.cpp \
+	$(DAISYSP_DIR)/DaisySP-LGPL/Source/Filters/tone.cpp
 
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
 include $(SYSTEM_FILES_DIR)/Makefile
