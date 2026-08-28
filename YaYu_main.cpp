@@ -13,9 +13,8 @@ yayu::Engine engine;
 yayu::Params params;
 daisysp::Limiter master_limiter[2];
 
-// Each ReverbSc owns a large delay network, so both live in external SDRAM.
-daisysp::ReverbSc DSY_SDRAM_BSS feedback_reverb;
-daisysp::ReverbSc DSY_SDRAM_BSS post_reverb;
+// The shared reverb can be routed inside or after the feedback loop.
+daisysp::ReverbSc DSY_SDRAM_BSS reverb;
 
 void AudioCallback(daisy::AudioHandle::InputBuffer in,
                    daisy::AudioHandle::OutputBuffer out,
@@ -38,7 +37,7 @@ int main()
     hw.SetAudioSampleRate(kSampleRate);
     hw.SetAudioBlockSize(kBlockSize);
 
-    engine.Init(hw.AudioSampleRate(), &feedback_reverb, &post_reverb);
+    engine.Init(hw.AudioSampleRate(), &reverb);
     engine.SetParams(params);
 
     for(auto& limiter : master_limiter)

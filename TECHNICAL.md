@@ -34,27 +34,28 @@ External input is not itself a physical model. It remains a separate source that
 Source / excitation
     -> Feedback FX slot 1
     -> Feedback FX slot 2
+    -> Reverb (when route = Feedback)
     -> feedback delay, gain, and in-loop protection
     -> return to the source
     -> Post FX slot 1
     -> Post FX slot 2
+    -> Reverb (when route = Post)
     -> output gain
     -> master limiter
 ```
 
-An effect participates in feedback by being selected in a feedback slot. An effect outside the loop belongs in a post slot. There is no global before/after routing switch.
+An effect participates in feedback by being selected in a feedback slot. An effect outside the loop belongs in a post slot. ToneDrive, Delay, and Flanger remain FX-slot types. Reverb is a single shared processor, outside the slots, with an explicit route selection.
 
-Each chain has two serial slots. Each slot stores its own effect type, dry/wet mix, ToneDrive parameters, and Reverb parameters.
+Each chain has two serial slots. Each slot stores its own effect type, dry/wet mix, and ToneDrive parameters.
 
 | Effect type | Status |
 |---|---|
 | `Bypass` | Implemented. |
 | `ToneDrive` | Implemented: three-band EQ, clean, overdrive, distortion, fuzz, and bit crush. |
-| `Reverb` | Implemented: one independent `ReverbSc` instance per chain. |
 | `Delay` | Reserved interface; currently safe bypass. |
 | `Flanger` | Reserved interface; currently safe bypass. |
 
-Only one Reverb can be active per chain for now. A second Reverb selection in the same chain is automatically bypassed because each chain currently owns one reverb instance.
+The single Reverb has `enabled`, dry/wet mix, feedback, low-pass cutoff, and `route` parameters. `route = Feedback` places it before the body write, so it participates in re-excitation. `route = Post` places it after both Post FX slots, so it affects only final output. Only one route can be active at a time.
 
 ### Feedback Protection
 
@@ -62,7 +63,22 @@ The feedback loop uses delay, return gain, and in-loop soft saturation before it
 
 ### Reverb Direction
 
-`ReverbSc` has eight internal modulated delay lines. The project currently allocates one instance for the feedback chain and one for the post chain, using about `792 KB` of SDRAM together.
+`ReverbSc` has eight internal modulated delay lines. The project allocates one shared instance, using about `396 KB` of SDRAM. Its route selects feedback-loop or post-output operation; it is not duplicated.
+
+Very long release time is not a primary goal. For Ya-Yu, diffusion, damping, frequency-dependent decay, and a controlled transition into feedback or freeze are more important than a maximum tail measured in seconds.
+
+#### Rings Reverb Reference
+
+The local `ringsX_MIDI` project is a useful compact reference. Its Audrey A/B/C modes reuse the original Mutable Rings reverb: a Dattorro/Griesinger topology with four input all-pass diffusers and a dual cross-feedback tank. It uses one `uint16_t[32768]` delay-memory buffer, about `64 KB` total. The delay states are stored at 16-bit resolution, while the mixing and filter calculations remain floating-point.
+
+This shows that a warm and dense reverb does not require a very large float buffer. The current Audrey mapping has an estimated low-frequency RT60 of roughly 20 seconds at its maximum setting; high frequencies decay sooner through damping. This is already sufficient for ambient and drone use. A local compact Dattorro-style Ya-Yu reverb is therefore a valid future alternative to the shared `ReverbSc` instance. This is a reference and design option, not an implemented Ya-Yu feature.
+
+#### Freeze Direction
+
+Freeze is planned as two distinct behaviours:
+
+1. **Sustained freeze**: latch the current reverb state, fade new input toward zero, and hold the network at a safe near-unity feedback target. It is intended for a continuously sustained texture, with the master limiter and in-loop protection remaining active.
+2. **Decay-integrated freeze**: capture the current reverb energy, then smoothly move between normal decay and the held state. Releasing freeze returns to the normal decay target gradually, so the captured sound dissolves into the active reverb rather than stopping or changing abruptly.
 
 Future warm/drone reverb work should be implemented locally in Ya-Yu, not by changing DaisySP: a dark `ReverbSc` parameter mode, then a dedicated 12/16-line FDN with high-frequency damping, low-frequency control, shallow modulation, and stable feedback protection.
 
@@ -120,27 +136,28 @@ Karplus-Strong was copied from [Synthux Academy's original Audrey II project](ht
 发生源 / 激励
     -> Feedback FX slot 1
     -> Feedback FX slot 2
+    -> Reverb（route = Feedback 时）
     -> Feedback delay、增益与回路内保护
     -> 回送至发生源
     -> Post FX slot 1
     -> Post FX slot 2
+    -> Reverb（route = Post 时）
     -> 输出增益
     -> Master limiter
 ```
 
-效果被放入 Feedback 插槽时参与回授；被放入 Post 插槽时位于回路之外。没有全局的前后路由开关。
+效果被放入 Feedback 插槽时参与回授；被放入 Post 插槽时位于回路之外。ToneDrive、Delay 和 Flanger 仍属于 FX 插槽类型。Reverb 是独立于插槽之外的一套共享处理器，通过明确的路由参数选择位置。
 
-每条链有两个串联插槽。每个插槽保存自身的效果类型、干湿比、ToneDrive 参数与 Reverb 参数。
+每条链有两个串联插槽。每个插槽保存自身的效果类型、干湿比与 ToneDrive 参数。
 
 | 效果类型 | 状态 |
 |---|---|
 | `Bypass` | 已实现。 |
 | `ToneDrive` | 已实现：三段 EQ、Clean、Overdrive、Distortion、Fuzz、Bit Crush。 |
-| `Reverb` | 已实现：每条链各有一套独立 `ReverbSc`。 |
 | `Delay` | 已预留接口；当前安全直通。 |
 | `Flanger` | 已预留接口；当前安全直通。 |
 
-当前每条链只能启用一个 Reverb。同一条链的第二个 Reverb 选择会自动直通，因为每条链目前只分配了一套混响实例。
+这套 Reverb 具有 `enabled`、干湿比、feedback、低通截止频率和 `route` 参数。`route = Feedback` 时它位于 body 写入之前，参与重新激励；`route = Post` 时它位于两个 Post FX 插槽之后，只影响最终输出。两种路由一次只能选择一种。
 
 ### 回授保护
 
@@ -148,7 +165,22 @@ Karplus-Strong was copied from [Synthux Academy's original Audrey II project](ht
 
 ### 混响方向
 
-`ReverbSc` 内部有八条带调制的延迟线。项目目前给 Feedback chain 和 Post chain 各分配一套实例，两者合计约使用 `792 KB` SDRAM。
+`ReverbSc` 内部有八条带调制的延迟线。项目只分配一套共享实例，约使用 `396 KB` SDRAM；通过路由选择它在 Feedback loop 内还是在最终输出后工作，不再复制实例。
+
+不应将极长的 Release 作为首要目标。对于 Ya-Yu，扩散、阻尼、随频率变化的衰减，以及进入 Feedback 或 Freeze 时的平滑过渡，比以秒数衡量的最长尾音更重要。
+
+#### Rings 混响参考
+
+本地 `ringsX_MIDI` 项目是一个很有价值的紧凑参考。它的 Audrey A/B/C 模式复用了原版 Mutable Rings 混响：Dattorro/Griesinger 拓扑，包含四级输入 all-pass 扩散器和双交叉反馈 tank。它只使用一块 `uint16_t[32768]` 延迟缓冲，总计约 `64 KB`。延迟线状态以 16-bit 保存，但混合与滤波计算仍使用浮点。
+
+这说明温暖、浓密的混响不一定需要很大的 float 缓冲。当前 Audrey 映射在最大值时，低频 RT60 估算约为 20 秒；高频会因阻尼更早衰减。这对 Ambient 与 Drone 已经足够。未来可在 Ya-Yu 内部实现紧凑的 Dattorro 风格混响，用来替换这套共享的 `ReverbSc`。这只是参考与设计选项，不是当前已实现功能。
+
+#### Freeze 方向
+
+Freeze 计划为两种不同的行为：
+
+1. **持续冻结**：锁存当前混响状态，将新的输入平滑淡出，并把网络保持在安全、接近 1 的反馈目标。它用于持续维持音色纹理，Master Limiter 与回路内保护仍保持工作。
+2. **融入自然衰减的冻结**：捕获当前混响能量，再在正常衰减与保持状态之间平滑移动。释放 Freeze 后，反馈目标逐渐回到正常衰减，使冻结的声音自然融入当前混响，而不是突然停止或突变。
 
 后续温暖/Drone 混响应在 Ya-Yu 项目内实现，不修改 DaisySP：先增加暗色 `ReverbSc` 参数模式，再实现专用的 12/16 线 FDN，加入高频阻尼、低频控制、浅调制与稳定的回路保护。
 

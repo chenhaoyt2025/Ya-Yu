@@ -11,13 +11,10 @@ constexpr float kEqFrequencyHz = 900.0f;
 constexpr float kEqResonance = 0.2f;
 }
 
-void Engine::Init(const float sample_rate,
-                  daisysp::ReverbSc* feedback_reverb,
-                  daisysp::ReverbSc* post_reverb)
+void Engine::Init(const float sample_rate, daisysp::ReverbSc* reverb)
 {
     sample_rate_ = sample_rate;
-    feedback_reverb_ = feedback_reverb;
-    post_reverb_ = post_reverb;
+    reverb_ = reverb;
     noise_.Init();
 
     for(size_t channel = 0; channel < 2; ++channel)
@@ -40,13 +37,9 @@ void Engine::Init(const float sample_rate,
         }
     }
 
-    if(feedback_reverb_ != nullptr)
+    if(reverb_ != nullptr)
     {
-        feedback_reverb_->Init(sample_rate_);
-    }
-    if(post_reverb_ != nullptr)
-    {
-        post_reverb_->Init(sample_rate_);
+        reverb_->Init(sample_rate_);
     }
 
     SetParams(params_);
@@ -55,23 +48,6 @@ void Engine::Init(const float sample_rate,
 void Engine::SetParams(const Params& params)
 {
     params_ = params;
-
-    // One ReverbSc instance is allocated for each chain. Keep a second Reverb
-    // selection in the same chain as a no-op until another instance is added.
-    EffectSlot* chains[] = {params_.feedback_fx, params_.post_fx};
-    for(auto* chain_slots : chains)
-    {
-        bool has_reverb = false;
-        for(size_t slot_index = 0; slot_index < 2; ++slot_index)
-        {
-            auto& slot = chain_slots[slot_index];
-            if(slot.type == EffectType::Reverb && has_reverb)
-            {
-                slot.type = EffectType::Bypass;
-            }
-            has_reverb = has_reverb || slot.type == EffectType::Reverb;
-        }
-    }
 
     const auto string_frequency = daisysp::mtof(params_.model_note);
 
@@ -94,29 +70,11 @@ void Engine::SetParams(const Params& params)
         }
     }
 
-    const auto configure_reverb = [this](daisysp::ReverbSc* reverb, const EffectSlot* slots) {
-        if(reverb == nullptr)
-        {
-            return;
-        }
-        for(size_t slot = 0; slot < 2; ++slot)
-        {
-            if(slots[slot].type == EffectType::Reverb)
-            {
-                reverb->SetFeedback(std::clamp(slots[slot].reverb.feedback, 0.0f, 0.99f));
-                reverb->SetLpFreq(
-                    std::clamp(slots[slot].reverb.lpf_hz, 100.0f, sample_rate_ * 0.45f));
-                return;
-            }
-        }
-    };
-    if(feedback_reverb_ != nullptr)
+    if(reverb_ != nullptr)
     {
-        configure_reverb(feedback_reverb_, params_.feedback_fx);
-    }
-    if(post_reverb_ != nullptr)
-    {
-        configure_reverb(post_reverb_, params_.post_fx);
+        reverb_->SetFeedback(std::clamp(params_.reverb.feedback, 0.0f, 0.99f));
+        reverb_->SetLpFreq(
+            std::clamp(params_.reverb.lpf_hz, 100.0f, sample_rate_ * 0.45f));
     }
 }
 
@@ -167,6 +125,11 @@ void Engine::Process(float in_l, float in_r, float& out_l, float& out_r)
                       feedback_r);
     }
 
+    if(params_.reverb.route == ReverbRoute::Feedback)
+    {
+        ProcessReverb(feedback_l, feedback_r, feedback_l, feedback_r);
+    }
+
     feedback_delay_[0].Write(ProcessLoopProtection(feedback_l) * params_.feedback_gain);
     feedback_delay_[1].Write(ProcessLoopProtection(feedback_r) * params_.feedback_gain);
 
@@ -175,6 +138,11 @@ void Engine::Process(float in_l, float in_r, float& out_l, float& out_r)
     for(size_t slot = 0; slot < 2; ++slot)
     {
         ProcessEffect(params_.post_fx[slot], 1, slot, post_l, post_r, post_l, post_r);
+    }
+
+    if(params_.reverb.route == ReverbRoute::Post)
+    {
+        ProcessReverb(post_l, post_r, post_l, post_r);
     }
 
     out_l = post_l * params_.output_gain;
@@ -199,21 +167,32 @@ void Engine::ProcessEffect(const EffectSlot& slot,
             wet_l = ProcessTone(input_l, slot.tone, chain, slot_index, 0);
             wet_r = ProcessTone(input_r, slot.tone, chain, slot_index, 1);
             break;
-        case EffectType::Reverb:
-        {
-            auto* reverb = chain == 0 ? feedback_reverb_ : post_reverb_;
-            if(reverb != nullptr)
-            {
-                reverb->Process(input_l, input_r, &wet_l, &wet_r);
-            }
-            break;
-        }
         case EffectType::Bypass:
         case EffectType::Delay:
         case EffectType::Flanger:
             break;
     }
 
+    output_l = input_l + (wet_l - input_l) * mix;
+    output_r = input_r + (wet_r - input_r) * mix;
+}
+
+void Engine::ProcessReverb(const float input_l,
+                           const float input_r,
+                           float& output_l,
+                           float& output_r)
+{
+    output_l = input_l;
+    output_r = input_r;
+    if(!params_.reverb.enabled || reverb_ == nullptr)
+    {
+        return;
+    }
+
+    float wet_l;
+    float wet_r;
+    reverb_->Process(input_l, input_r, &wet_l, &wet_r);
+    const float mix = std::clamp(params_.reverb.mix, 0.0f, 1.0f);
     output_l = input_l + (wet_l - input_l) * mix;
     output_r = input_r + (wet_r - input_r) * mix;
 }

@@ -31,9 +31,14 @@ enum class EffectType : uint8_t
 {
     Bypass,
     ToneDrive,
-    Reverb,
     Delay,
     Flanger,
+};
+
+enum class ReverbRoute : uint8_t
+{
+    Feedback,
+    Post,
 };
 
 struct ToneDriveParams
@@ -48,6 +53,9 @@ struct ToneDriveParams
 
 struct ReverbParams
 {
+    bool        enabled {false};
+    ReverbRoute route {ReverbRoute::Feedback};
+    float       mix {0.5f};
     float feedback {0.6f};
     float lpf_hz {12000.0f};
 };
@@ -57,7 +65,6 @@ struct EffectSlot
     EffectType      type {EffectType::Bypass};
     float           mix {1.0f};
     ToneDriveParams tone {};
-    ReverbParams    reverb {};
 };
 
 struct Params
@@ -72,6 +79,7 @@ struct Params
     // Source -> feedback effects -> feedback return -> post effects -> limiter.
     EffectSlot feedback_fx[2] {{EffectType::ToneDrive}, {EffectType::Bypass}};
     EffectSlot post_fx[2] {{EffectType::Bypass}, {EffectType::Bypass}};
+    ReverbParams reverb {};
 
     float feedback_gain {0.0f};
     float feedback_delay_s {0.003f};
@@ -83,9 +91,7 @@ struct Params
 class Engine
 {
   public:
-    void Init(float sample_rate,
-              daisysp::ReverbSc* feedback_reverb,
-              daisysp::ReverbSc* post_reverb);
+    void Init(float sample_rate, daisysp::ReverbSc* reverb);
     void SetParams(const Params& params);
     void Process(float in_l, float in_r, float& out_l, float& out_r);
 
@@ -96,6 +102,10 @@ class Engine
                        size_t chain,
                        size_t slot_index,
                        float input_l,
+                       float input_r,
+                       float& output_l,
+                       float& output_r);
+    void ProcessReverb(float input_l,
                        float input_r,
                        float& output_l,
                        float& output_r);
@@ -121,7 +131,6 @@ class Engine
     daisysp::Svf tone_eq_[2][2][2];
     daisysp::Overdrive overdrive_[2][2][2];
     daisysp::Bitcrush bitcrush_[2][2][2];
-    daisysp::ReverbSc* feedback_reverb_ {nullptr};
-    daisysp::ReverbSc* post_reverb_ {nullptr};
+    daisysp::ReverbSc* reverb_ {nullptr};
 };
 } // namespace yayu
