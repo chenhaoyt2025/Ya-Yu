@@ -6,9 +6,9 @@
 
 This project uses a story concept inspired by Yà-Yǔ (猰貐), rather than claiming to reproduce a historical source exactly.
 
-Ya-Yu was a mountain deity who was poisoned and killed in a conspiracy between deities. Years later, the people responsible for his death revived him through six sorcerers. The poison remained inside him after revival: it left a permanent knot in his body and made parts of him impossible to control.
+Ya-Yu was a mountain deity who was poisoned and killed in a conspiracy between deities. The people responsible for his death were later imprisoned by the Heavenly Emperor. Years later, six sorcerers revived Ya-Yu; their act of revival has no causal connection to the people who killed him. The poison remained inside him after revival: it left a permanent knot in his body and made parts of him impossible to control.
 
-When the knot takes hold, Ya-Yu becomes a beast. He withdraws into the mountains, fearing both the harm he may cause and the fact that he is beginning to enjoy the force of that transformation. The person behind his revival continues to manipulate the curse and uses Ya-Yu's name to create further violence.
+When the knot takes hold, Ya-Yu becomes a beast. He withdraws into the mountains, fearing both the harm he may cause and the fact that he is beginning to enjoy the force of that transformation. The poison knot itself is the source of his recurring loss of control.
 
 At the end, Ya-Yu draws Hou Yi to him. He appears to be a monster attacking the world, but is seeking a final choice that the curse cannot take from him. He accepts Hou Yi's arrow, and the remaining divine power becomes a protective spirit of the mountain.
 
@@ -34,9 +34,9 @@ At the end, Ya-Yu draws Hou Yi to him. He appears to be a monster attacking the 
 
 本项目采用受猰貐故事启发的故事概念，不试图逐字复述任何历史文献。
 
-猰貐本是山中的神祇，死于一场神祇之间的阴谋：他被设计毒杀。多年以后，杀死他的人又借六个巫师之手将他复活。毒药却没有消失，而是在他的身体里留下了无法解开的结，使他无法完全控制自己。
+猰貐本是山中的神祇，死于一场神祇之间的阴谋：他被设计毒杀。杀死他的人后来已被天帝囚禁。多年以后，六个巫师将猰貐复活；这场复活与杀死他的人没有因果关系。毒药却没有消失，而是在他的身体里留下了无法解开的结，使他无法完全控制自己。
 
-每当这道结发作，猰貐便会化为凶兽。他逃进深山，既害怕伤害他人，也害怕自己正在逐渐享受那种失控的力量。复活他的人继续操纵这道诅咒，并借猰貐之名制造杀戮。
+每当这道结发作，猰貐便会化为凶兽。他逃进深山，既害怕伤害他人，也害怕自己正在逐渐享受那种失控的力量。使他反复失控的来源是体内的毒结本身。
 
 最终，猰貐将后羿引向自己。他表面上像是在袭击人世，真正等待的却是一件诅咒无法夺走的事：由自己选择结局。他迎向后羿的箭，将残存神力留在山中，成为守护土地的山灵。
 
