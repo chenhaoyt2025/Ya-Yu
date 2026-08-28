@@ -1,8 +1,11 @@
 # Ya-Yu firmware profiles. Dependencies are checked out as Git submodules.
 PROFILE ?= seed
 
-LIBDAISY_DIR = lib/libDaisy
-DAISYSP_DIR = lib/DaisySP
+LIBDAISY_DIR ?= lib/libDaisy
+DAISYSP_DIR ?= lib/DaisySP
+
+# Optional local paths are intentionally not committed.
+-include local.mk
 
 ifeq ($(PROFILE),seed)
 override TARGET := yayu_seed
