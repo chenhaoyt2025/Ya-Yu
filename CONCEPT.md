@@ -18,7 +18,6 @@ At the end, Ya-Yu draws Hou Yi to him. He appears to be a monster attacking the 
 |---|---|
 | **Poison** | A macro control for distortion amount and/or noise proportion. It moves the sound from the clean **Prime** state toward unstable **Reborn**, and then toward the more extreme **Final** state. |
 | **Six sorcerers** | Six macro parameters representing the act of revival. Their exact assignments remain open until the hardware control layout is defined. |
-| **Poison knot** | The musical loss of control: nonlinear feedback, unstable modulation, saturation, noise, or parameter interaction that resists a fully predictable response. |
 
 ### Three States
 
@@ -46,7 +45,6 @@ At the end, Ya-Yu draws Hou Yi to him. He appears to be a monster attacking the 
 |---|---|
 | **Poison（毒药）** | 用作失真量和/或噪音比例的宏参数。它让声音从干净的 **Prime** 逐步过渡到不稳定的 **Reborn**，再进入更极端的 **Final**。 |
 | **六个巫师** | 代表复活过程的六个宏参数。具体对应哪些声音参数，等待硬件控制布局确定后再分配。 |
-| **毒结** | 对应音乐上的失控：非线性回授、不稳定调制、饱和、噪音，或不可完全预测的参数交互。 |
 
 ### 三个状态
 
