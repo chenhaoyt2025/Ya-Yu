@@ -4,10 +4,6 @@
 
 Ya-Yu is an experimental physical-model feedback instrument and effect project, named after the mythological Yà-Yǔ (猰貐). It is inspired by [Audrey II from Synthux Academy](https://github.com/Synthux-Academy/simple-designer-instruments/tree/main/official/audrey-ii), especially its Karplus-Strong sound design and nested-feedback ideas.
 
-![Ya-Yu character reference](assets/yayu-character-reference.png)
-
-> Character visual reference only; this is not a Ya-Yu module, panel, or UI design.
-
 The main goal is controllable guitar-style feedback: external sound or a physical model is shaped, then a controlled portion returns to re-excite the source. The system should support clean sustaining resonance, dense drones, and unstable nonlinear feedback without losing musical intent.
 
 ### Three Forms
@@ -38,8 +34,6 @@ Clone with dependencies using `git clone --recurse-submodules <repository-url>`,
 
 Ya-Yu 是一个实验性的物理建模回授乐器与效果器项目，名称来自中国神话人物猰貐（Yà-Yǔ）。项目受到 [Synthux Academy 的 Audrey II](https://github.com/Synthux-Academy/simple-designer-instruments/tree/main/official/audrey-ii) 的物理建模与嵌套回授思路启发，尤其参考其 Karplus-Strong 声音设计。
 
-> 上图仅作为猰貐角色形象参考，不是 Ya-Yu 模块、面板或 UI 设计。
-
 主要目标是可控制的吉他回授：外部声音或物理建模发声源经过音色塑形后，其中受控的一部分重新返回并激励发声源。系统应能实现干净的持续共振、浓密 Drone 与不稳定的非线性回授，同时保持音乐性。
 
 ### 三个形态
@@ -65,3 +59,10 @@ Ya-Yu 是一个实验性的物理建模回授乐器与效果器项目，名称�
 烧录命令为 `make flash-seed` 与 `make flash-spotykach`。它们只写入应用固件，不会构建或覆盖 bootloader。本项目不会修改任何共享库源码。
 
 请使用 `git clone --recurse-submodules <repository-url>` 克隆包含依赖的项目，然后运行 `make seed` 或 `make spotykach`。`libDaisy` 和 `DaisySP` 通过 Git submodule 链接，不会修改它们的源码。
+
+### Character Reference / 角色参考
+
+![Ya-Yu character reference](assets/yayu-character-reference.png)
+
+> Character visual reference only; this is not a Ya-Yu module, panel, or UI design.  
+> 仅作为猰貐角色形象参考，不是 Ya-Yu 模块、面板或 UI 设计。
