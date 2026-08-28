@@ -15,6 +15,19 @@ Implemented source modes:
 
 Digital waveguide, bowed-string, stiff-string, modal resonator, and other physical models are planned but are not implemented.
 
+### Physical-Model Engine Roadmap
+
+| Engine | State | Intended character |
+|---|---|---|
+| Karplus-Strong string | Implemented. | Plucked-string excitation and unstable resonant feedback. |
+| Digital waveguide string | Planned. | A more explicit travelling-wave string model for guitar-like feedback. |
+| Bowed waveguide string | Planned. | Nonlinear bow-friction excitation for sustained bowed-string and cello-like behaviour. |
+| Stiff / dispersive string | Planned. | Inharmonic partials and brighter, metallic, or prepared-string behaviour. |
+| Modal resonator or multi-resonator bank | Planned. | Dense sympathetic resonance, body-like modes, and drone textures. |
+| Custom physical models | Planned. | Future source models selected for Ya-Yu: Reborn and Ya-Yu: Final. |
+
+External input is not itself a physical model. It remains a separate source that can be heard directly, used to excite a selected model, or mixed in parallel with that model.
+
 ### Fixed Signal Structure
 
 ```text
@@ -87,6 +100,19 @@ Karplus-Strong was copied from [Synthux Academy's original Audrey II project](ht
 - 外部输入与 Karplus-Strong 并联。
 
 数字波导、拉弓弦、刚性弦、模态共振器及其他物理模型已经规划，但尚未实现。
+
+### 物理建模引擎路线
+
+| 引擎 | 状态 | 预期声音特征 |
+|---|---|---|
+| Karplus-Strong 弦 | 已实现。 | 拨弦激励与不稳定的共振回授。 |
+| 数字波导弦 | 已规划。 | 更明确的行波弦模型，用于类似吉他回授的行为。 |
+| 拉弓数字波导弦 | 已规划。 | 通过非线性弓毛摩擦激励，实现持续的弦乐或大提琴类行为。 |
+| 刚性 / 色散弦 | 已规划。 | 非谐泛音，更明亮的金属感或预制弦行为。 |
+| 模态共振器或多共振器组 | 已规划。 | 浓密的共鸣弦、琴体类模态与 Drone 纹理。 |
+| 自定义物理模型 | 已规划。 | 为 Ya-Yu: Reborn 与 Ya-Yu: Final 选择的后续发生源。 |
+
+外部输入本身不是物理建模。它是独立的发生源：可以直接听到、用来激励选定模型，或与模型输出并联混合。
 
 ### 固定信号结构
 
