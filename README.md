@@ -15,7 +15,7 @@ The main goal is controllable guitar-style feedback: external sound or a physica
 | **Ya-Yu: Final** | The final state after the encounter with Hou Yi. A later experimental form for fragmented, destructive, unstable, and other unconventional sound processes. |
 
 
-The story adaptation and sound-parameter concept are in [`CONCEPT.md`](CONCEPT.md). Implementation details and development route are in [`TECHNICAL.md`](TECHNICAL.md).
+The story concept and sound-parameter concept are in [`CONCEPT.md`](CONCEPT.md). Implementation details and development route are in [`TECHNICAL.md`](TECHNICAL.md).
 
 This is version **0.1** and is released under the [MIT License](LICENSE).
 
@@ -45,7 +45,7 @@ Ya-Yu 是一个实验性的物理建模回授乐器与效果器项目，名称�
 | **Ya-Yu: Final** | 与后羿相遇之后的最终状态。后续的实验形态，用于碎片化、破坏性、不稳定与其他非常规声音过程。 |
 
 
-改编故事与声音参数概念见 [`CONCEPT.md`](CONCEPT.md)。实现细节与开发路线见 [`TECHNICAL.md`](TECHNICAL.md)。
+故事概念与声音参数概念见 [`CONCEPT.md`](CONCEPT.md)。实现细节与开发路线见 [`TECHNICAL.md`](TECHNICAL.md)。
 
 当前为 **0.1** 版本，采用 [MIT License](LICENSE)。
 

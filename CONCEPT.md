@@ -2,9 +2,9 @@
 
 ## English
 
-### Adapted Story
+### Story Concept
 
-This project uses an original adaptation inspired by the story of Yà-Yǔ (猰貐), rather than claiming to reproduce a historical source exactly.
+This project uses a story concept inspired by Yà-Yǔ (猰貐), rather than claiming to reproduce a historical source exactly.
 
 Ya-Yu was a mountain deity who was poisoned and killed in a conspiracy between deities. Years later, the people responsible for his death revived him through six sorcerers. The poison remained inside him after revival: it left a permanent knot in his body and made parts of him impossible to control.
 
@@ -30,9 +30,9 @@ At the end, Ya-Yu draws Hou Yi to him. He appears to be a monster attacking the 
 
 ## 中文
 
-### 改编故事
+### 故事概念
 
-本项目采用受猰貐故事启发的原创改编，不试图逐字复述任何历史文献。
+本项目采用受猰貐故事启发的故事概念，不试图逐字复述任何历史文献。
 
 猰貐本是山中的神祇，死于一场神祇之间的阴谋：他被设计毒杀。多年以后，杀死他的人又借六个巫师之手将他复活。毒药却没有消失，而是在他的身体里留下了无法解开的结，使他无法完全控制自己。
 
