@@ -1,10 +1,5 @@
 # Ya-Yu Concept
 
-![Ya-Yu character reference](assets/yayu-character-reference.png)
-
-> Character visual reference only; this is not a Ya-Yu module, panel, or UI design.  
-> 仅作为猰貐角色形象参考，不是 Ya-Yu 模块、面板或 UI 设计。
-
 ## English
 
 ### Story Concept
